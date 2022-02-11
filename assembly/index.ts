@@ -49,6 +49,25 @@ class TokenType {
 
   static readonly EOF: string = 'EOF';
 }
+
+const keywords = new Map<string, string>();
+keywords.set('and', TokenType.AND);
+keywords.set('class', TokenType.CLASS);
+keywords.set('else', TokenType.ELSE);
+keywords.set('false', TokenType.FALSE);
+keywords.set('for', TokenType.FOR);
+keywords.set('fun', TokenType.FUN);
+keywords.set('if', TokenType.IF);
+keywords.set('nil', TokenType.NIL);
+keywords.set('or', TokenType.OR);
+keywords.set('print', TokenType.PRINT);
+keywords.set('return', TokenType.RETURN);
+keywords.set('super', TokenType.SUPER);
+keywords.set('this', TokenType.THIS);
+keywords.set('true', TokenType.TRUE);
+keywords.set('var', TokenType.VAR);
+keywords.set('while', TokenType.WHILE);
+
 type Literal = string | null;
 class Token {
   type: string;
@@ -162,6 +181,22 @@ class Scanner {
     this.addToken(TokenType.NUMBER, literal);
   }
 
+  private isAlpha(c: string): boolean {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+  }
+
+  private isAlphaNumeric(c: string): boolean {
+    return this.isAlpha(c) || this.isDigit(c);
+  }
+
+  private identifier(): void {
+    while (this.isAlphaNumeric(this.peek())) this.advance();
+
+    const text = this.source.substring(this.start, this.current);
+    const t = keywords.has(text) ? keywords.get(text) : TokenType.IDENTIFIER;
+    this.addToken(t, null);
+  }
+
   private scanToken(): void {
     const c = this.advance();
     if (c == '(') {
@@ -220,6 +255,8 @@ class Scanner {
     } else {
       if (this.isDigit(c)) {
         this.number();
+      } else if (this.isAlpha(c)) {
+        this.identifier();
       } else {
         Lox.error(this.line, 'unexpected character');
       }
@@ -238,7 +275,7 @@ class Scanner {
 }
 
 export function tokenize(source: string): Array<string> {
-  const scanner = new Scanner('var language = "lox";');
+  const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
   return tokens.map<string>((t) => t.type);
 }

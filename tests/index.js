@@ -21,5 +21,12 @@ test('tokenizer: can do grouping things', async (t) => {
 
 test('tokenizer', async (t) => {
   const input = `var language = "lox";`;
-  t.deepEqual(await m.__tokenize(input), ['VAR', 'language', '=', '"lox"']);
+  t.deepEqual(await m.__tokenize(input), [
+    'VAR',
+    'IDENTIFIER', // 'language',
+    'EQUAL', // '=',
+    'STRING', // '"lox"',
+    'SEMICOLON',
+    'EOF',
+  ]);
 });
