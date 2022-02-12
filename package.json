@@ -4,16 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node tests",
-    "asbuild:untouched": "asc assembly/index.ts --target debug --exportRuntime --transform as-bind",
-    "asbuild:optimized": "asc assembly/index.ts --target release --exportRuntime --transform as-bind",
-    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
+    "test": "ava",
+    "jlox:build:watch": "chokidar \"packages/jlox/assembly\" -c \"npm run jlox:build:untouched\"",
+    "jlox:build": "npm run jlox:build:untouched && npm run jlox:build:optimized",
+    "jlox:build:untouched": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target debug --exportRuntime --transform as-bind",
+    "jlox:build:optimized": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target release --exportRuntime --transform as-bind"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "private": true,
   "dependencies": {
     "@assemblyscript/loader": "^0.19.22",
     "as-bind": "^0.8.2",
+    "as-wasi": "^0.4.6",
     "readline": "^1.3.0"
   },
   "devDependencies": {
