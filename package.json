@@ -8,7 +8,12 @@
     "jlox:build:watch": "chokidar \"packages/jlox/assembly\" -c \"npm run jlox:build:untouched\"",
     "jlox:build": "npm run jlox:build:untouched && npm run jlox:build:optimized",
     "jlox:build:untouched": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target debug --exportRuntime --transform as-bind",
-    "jlox:build:optimized": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target release --exportRuntime --transform as-bind"
+    "jlox:build:optimized": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target release --exportRuntime --transform as-bind",
+    "cli:build:watch": "chokidar \"packages/cli/assembly\" -c \"npm run cli:build:untouched\"",
+    "cli:build": "npm run cli:build:untouched && npm run cli:build:optimized",
+    "cli:build:untouched": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target debug --exportRuntime --transform as-bind",
+    "cli:build:optimized": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target release --exportRuntime --transform as-bind",
+    "cli:run": "chokidar \"packages/cli/build/untouched.wasm\" -c \"wasmtime packages/cli/build/untouched.wasm\""
   },
   "author": "",
   "license": "MIT",

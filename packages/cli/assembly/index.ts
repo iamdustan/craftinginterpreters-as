@@ -1,4 +1,11 @@
-import 'wasi';
+import { program } from './program';
 
-import { Console } from 'as-wasi';
-Console.log('Hello World!\n');
+program
+  .name('jlox-as cli')
+  .version('0.0.1')
+  .description('Hopefully a cli tool for Crafting Interpreters')
+  .command('run', function () {
+    Console.log('running a thing woot');
+  });
+
+program.execute('run');
