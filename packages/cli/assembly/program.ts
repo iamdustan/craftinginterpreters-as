@@ -2,25 +2,41 @@ import 'wasi';
 
 import { CommandLine, Console, Process } from 'as-wasi';
 
-const cli = new CommandLine();
+export const cli = new CommandLine();
+export type CommandAction = (this: Command) => void;
 
-/*
 class Command {
-  fn: () => void;
-  constructor(fn: () => void) {
-    this.fn = fn;
+  _program: Program;
+  _name: string;
+  _description: string;
+  _action: CommandAction;
+  constructor(name: string) {
+    this._program = program;
+    this._name = name;
+    this._description = '';
+    this._action = () => {};
+  }
+  setProgram(program: Program): this {
+    this._program = program;
+    return this;
+  }
+  description(description: string): this {
+    this._description = description;
+    return this;
+  }
+  action(action: CommandAction): this {
+    this._action = action;
+    return this;
   }
   execute(): void {
-    this.fn();
+    this._action.call(this);
   }
 }
-*/
-type Command = (this: Program) => void;
 
 class Program {
   private _name: string;
   private _description: string;
-  private _version: string;
+  _version: string;
   private _options: Map<string, string>;
   private _commands: Map<string, Command>;
 
@@ -31,23 +47,6 @@ class Program {
     this._options = new Map<string, string>();
 
     this._commands = new Map<string, Command>();
-    this._commands.set('version', this.__version);
-    this._commands.set('help', this.__help);
-  }
-
-  __version(): void {
-    Console.log(this._version);
-    Process.exit(0);
-  }
-  __help(): void {
-    Console.log(this._name);
-    Console.log(this._description + '\n');
-    Console.log('Usage: help [options]');
-    const commands = this._commands.keys();
-    commands.forEach((value) => {
-      Console.log('  --' + value + '  thing');
-    });
-    Process.exit(2);
   }
 
   name(name: string): this {
@@ -69,15 +68,31 @@ class Program {
     return this;
   }
 
-  command(name: string, action: Command): this {
-    this._commands.set(name, action);
+  command(name: string): Command {
+    const command = new Command(name);
+    command.setProgram(this);
+    this._commands.set(name, command);
+    return command;
+  }
+
+  parse(argv: Array<string>): this {
+    const args = argv.slice(1);
+    // naively assume the first argument is the command and the trailing
+    // arguments are options
+    const commandName = args[0];
+    if (commandName.startsWith('-')) {
+      // actually we have a built in option like --help or --version. look it up.
+      Console.log('do a thing');
+    } else {
+      this.execute(commandName);
+    }
     return this;
   }
 
   execute(name: string): void {
     if (this._commands.has(name)) {
       const command = this._commands.get(name);
-      command.call(this);
+      command.execute();
     } else {
       Console.log('[ERROR] The command "' + name + '" is not available.');
     }
@@ -85,3 +100,38 @@ class Program {
 }
 
 export const program = new Program();
+
+program
+  .command('help')
+  .description('Print help text')
+  .action(function help(this: Command) {
+    const program = (this as Command)._program;
+    Console.log(program._name);
+    Console.log(program._description + '\n');
+    Console.log('Usage: help [options]');
+    const commands = program._commands.keys();
+    let length = 0;
+    for (let i = 0, k = commands.length; i < k; i++) {
+      const value = commands[i];
+      if (value.length > length) {
+        length = value.length;
+      }
+    }
+
+    for (let i = 0, k = commands.length; i < k; i++) {
+      const value = commands[i];
+      const command = value;
+      const description = program._commands.get(command)._description;
+      Console.log('  ' + value.padStart(length, ' ') + '  ' + description);
+    }
+    Process.exit(2);
+  });
+
+program
+  .command('version')
+  .description('Print program version')
+  .action(() => {
+    const program = (this as Command)._program;
+    Console.log(program._version);
+    Process.exit(0);
+  });

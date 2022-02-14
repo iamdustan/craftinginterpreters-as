@@ -1,4 +1,4 @@
-import { program } from './program';
+import { cli, program } from './program';
 
 class CodeGen {
   _outputDir: string;
@@ -60,8 +60,12 @@ class CodeGen {
 program
   .name('jlox-as cli')
   .version('0.0.1')
-  .description('Hopefully a cli tool for Crafting Interpreters')
-  .command('run', function () {
+  .description('Hopefully a cli tool for Crafting Interpreters');
+
+program
+  .command('run')
+  .description('Run the Java codegen')
+  .action(function () {
     const outputDir = 'pretent/this/is/a/directory';
     const gen = new CodeGen(outputDir, 'Expr');
     const r = gen.defineAst([
@@ -73,4 +77,4 @@ program
     Console.log(r);
   });
 
-program.execute('run');
+program.parse(cli.args);
