@@ -10,18 +10,25 @@ export class GenerateJavaAst {
   }
 
   defineAst(types: Array<string>): string {
-    const path = this._outputDir + '/' + this._baseName + '.java';
+    // const path = this._outputDir + '/' + this._baseName + '.java';
     let result = '';
     result += 'package com.craftinginterpreters.lox;';
     result += '\n';
     result += 'import java.util.List;';
     result += '\n';
     result += 'abstract class ' + this._baseName + ' {\n';
+    result += this.defineVisitor(types);
+
+    // the ast class
     for (let i = 0, k = types.length; i < k; ++i) {
       const type = types[i];
       result += this.defineType(type);
     }
-    // types.forEach(this.defineType);
+
+    // The base accept() method.
+    result += '\n';
+    result += '  abstract <R> R accept(Visitor<R> visitor);\n';
+
     result += '}\n';
     return result;
   }
@@ -53,8 +60,35 @@ export class GenerateJavaAst {
       result += '    final ' + field + ';\n';
     }
 
+    // visitor
+    result += '\n';
+    result += '    @Override\n';
+    result += '    <R> R accept(Visitor<R> visitor) {\n';
+    result +=
+      '      return visitor.visit' + className + this._baseName + '(this);\n';
+
+    result += '    }\n';
     result += '  }\n';
     return result;
+  }
+
+  defineVisitor(types: Array<string>): string {
+    let result = '  interface Visitor<R> {\n';
+    for (let i = 0, k = types.length; i < k; ++i) {
+      const t = types[i];
+      const typeName = t.split(':')[0].trim();
+      result +=
+        '    R visit' +
+        typeName +
+        this._baseName +
+        '(' +
+        typeName +
+        ' ' +
+        this._baseName.toLowerCase() +
+        ');\n';
+    }
+
+    return result + '  }\n';
   }
 }
 
@@ -77,7 +111,7 @@ export class GenerateAsAst {
   }
 
   defineAst(types: Array<string>): string {
-    const path = this._outputDir + '/' + this._baseName + '.java';
+    // const path = this._outputDir + '/' + this._baseName + '.java';
     let result = '';
     result += 'class ' + this._baseName + ' {\n';
     for (let i = 0, k = types.length; i < k; ++i) {
@@ -95,7 +129,7 @@ export class GenerateAsAst {
     const fields = fieldList.split(', ');
 
     let result = '';
-    result += '  static class ' + className + '{\n';
+    result += '  static class ' + className + ' {\n';
     // Fields.
     for (let i = 0, k = fields.length; i < k; ++i) {
       const field = fields[i];
@@ -113,6 +147,14 @@ export class GenerateAsAst {
     }
 
     result += '    }\n';
+
+    result += '\n';
+    result += '    accept<R>(visitor: Visitor<R>) {\n';
+    result +=
+      '      return visitor.visit' + className + this._baseName + '(this);\n';
+
+    result += '    }\n';
+    result += '  }\n';
 
     result += '  }\n';
     return result;
