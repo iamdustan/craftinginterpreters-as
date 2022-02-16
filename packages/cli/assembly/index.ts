@@ -1,5 +1,6 @@
+import { Console } from 'as-wasi';
 import { cli, program } from './program';
-import { GenerateAsAst as GenerateAst } from './GenerateAst';
+import { GenerateJavaAst, GenerateAsAst } from './GenerateAst';
 
 program
   .name('jlox-as cli')
@@ -8,17 +9,28 @@ program
 
 program
   .command('run')
-  .description('Run the Java codegen')
-  .action(function () {
+  // TODO: enable options parsing
+  // .options('--language', '<java|as>')
+  .description('Run the Expressions codegen')
+  .option('--java', 'Emit Java')
+  .option('--as', 'Emit Assembyscript')
+  .option('--help', '')
+  .action(function (opts) {
     const outputDir = 'pretent/this/is/a/directory';
-    const gen = new GenerateAst(outputDir, 'Expr');
-    const r = gen.defineAst([
+    const ast = [
       'Binary   : Expr left, Token operator, Expr right',
       'Grouping : Expr expression',
       'Literal  : Object value',
       'Unary    : Token operator, Expr right',
-    ]);
-    Console.log(r);
+    ];
+
+    if (opts.has('as')) {
+      const gen = new GenerateAsAst(outputDir, 'Expr');
+      Console.log(gen.defineAst(ast));
+    } else {
+      const gen = new GenerateJavaAst(outputDir, 'Expr');
+      Console.log(gen.defineAst(ast));
+    }
   });
 
 program.parse(cli.args);

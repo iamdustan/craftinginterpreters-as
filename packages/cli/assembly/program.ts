@@ -3,19 +3,38 @@ import 'wasi';
 import { CommandLine, Console, Process } from 'as-wasi';
 
 export const cli = new CommandLine();
-export type CommandAction = (this: Command) => void;
+export type CommandAction = (this: Command, options: Set<string>) => void;
 
 class Command {
   _program: Program;
   _name: string;
   _description: string;
   _action: CommandAction;
+  _options: Map<string, string>;
+
   constructor(name: string) {
     this._program = program;
     this._name = name;
     this._description = '';
-    this._action = () => {};
+    this._options = new Map();
+    this._action = (_options: Set<string>) => {};
+
+    this.option('--help', 'Print help');
   }
+  help(): void {
+    Console.log(this._program._name + ' ' + this._name + ': help');
+    Console.log(this._description);
+
+    const length = 8;
+    const options = this._options.keys();
+    for (let i = 0, k = options.length; i < k; i++) {
+      const option = options[i];
+      const description = this._options.get(option);
+      const optName = option.padEnd(length, ' ');
+      Console.log('  ' + optName + ' ' + description);
+    }
+  }
+
   setProgram(program: Program): this {
     this._program = program;
     return this;
@@ -24,17 +43,31 @@ class Command {
     this._description = description;
     return this;
   }
+  // currently we only support boolean options. They are present or they are
+  // not.
+  option(key: string, description: string | null): this {
+    if (description) {
+      this._options.set(key, description);
+    } else {
+      this._options.set(key, '');
+    }
+    return this;
+  }
   action(action: CommandAction): this {
     this._action = action;
     return this;
   }
-  execute(): void {
-    this._action.call(this);
+  execute(opts: Set<string>): void {
+    if (opts.has('help')) {
+      this.help();
+    } else {
+      this._action.call(this, opts);
+    }
   }
 }
 
 class Program {
-  private _name: string;
+  _name: string;
   private _description: string;
   _version: string;
   private _options: Map<string, string>;
@@ -84,15 +117,21 @@ class Program {
       // actually we have a built in option like --help or --version. look it up.
       Console.log('do a thing');
     } else {
-      this.execute(commandName);
+      const options: Set<string> = args.reduce((acc, cur) => {
+        if (cur.startsWith('--')) {
+          acc.add(cur.slice(2));
+        }
+        return acc;
+      }, new Set<string>());
+      this.execute(commandName, options);
     }
     return this;
   }
 
-  execute(name: string): void {
+  execute(name: string, opts: Set<string>): void {
     if (this._commands.has(name)) {
       const command = this._commands.get(name);
-      command.execute();
+      command.execute(opts);
     } else {
       Console.log('[ERROR] The command "' + name + '" is not available.');
     }
