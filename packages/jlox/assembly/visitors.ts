@@ -1,3 +1,5 @@
+import { Expr } from './Expr';
+
 interface Visitor<T> {
   accept(visitor: Expr): T;
 }

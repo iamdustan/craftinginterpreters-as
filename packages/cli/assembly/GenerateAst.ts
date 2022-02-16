@@ -113,13 +113,16 @@ export class GenerateAsAst {
   defineAst(types: Array<string>): string {
     // const path = this._outputDir + '/' + this._baseName + '.java';
     let result = '';
-    result += 'class ' + this._baseName + ' {\n';
+    result += this.defineVisitor(types);
+
+    result += 'export abstract class ' + this._baseName + ' {\n';
+    result += '  abstract accept<R>(visitor: Visitor<R>): R;\n';
+    result += '}\n\n';
+
     for (let i = 0, k = types.length; i < k; ++i) {
       const type = types[i];
       result += this.defineType(type);
     }
-    // types.forEach(this.defineType);
-    result += '}\n';
     return result;
   }
 
@@ -129,34 +132,58 @@ export class GenerateAsAst {
     const fields = fieldList.split(', ');
 
     let result = '';
-    result += '  static class ' + className + ' {\n';
+
+    result +=
+      'export class ' + className + ' implements ' + this._baseName + ' {\n';
     // Fields.
     for (let i = 0, k = fields.length; i < k; ++i) {
       const field = fields[i];
-      result += '    this.' + fieldListToAsParams(field) + ';\n';
+      result += '  this.' + fieldListToAsParams(field) + ';\n';
     }
     result += '\n';
 
     // Constructor.
-    result += '    constructor(' + fieldListToAsParams(fieldList) + ') {\n';
+    result += '  constructor(' + fieldListToAsParams(fieldList) + ') {\n';
     // Store parameters in fields.
     for (let i = 0, k = fields.length; i < k; ++i) {
       const field = fields[i];
       const name = field.split(' ')[1];
-      result += '      this.' + name + ' = ' + name + ';\n';
+      result += '    this.' + name + ' = ' + name + ';\n';
     }
 
-    result += '    }\n';
+    result += '  }\n';
 
     result += '\n';
-    result += '    accept<R>(visitor: Visitor<R>) {\n';
+    result += '  accept<R>(visitor: Visitor<R>) {\n';
     result +=
       '      return visitor.visit' + className + this._baseName + '(this);\n';
 
-    result += '    }\n';
     result += '  }\n';
+    result += '}\n';
 
-    result += '  }\n';
+    return result;
+  }
+
+  defineVisitor(types: Array<string>): string {
+    let result = '';
+    const baseName = this._baseName;
+
+    result += 'export interface Visitor<R> {\n';
+    for (let i = 0, k = types.length; i < k; ++i) {
+      const type = types[i];
+      const typeName = type.split(':')[0].trim();
+      result +=
+        '  visit' +
+        typeName +
+        baseName +
+        '<R>(' +
+        baseName.toLowerCase() +
+        ': ' +
+        typeName +
+        '): R;\n';
+    }
+
+    result += '}\n\n';
     return result;
   }
 }
