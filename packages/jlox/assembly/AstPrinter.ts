@@ -1,24 +1,28 @@
 import { Expr, Binary, Grouping, Literal, Unary, Visitor } from './Expr';
 
-interface Visitor<T> {
-  accept(visitor: Expr): T;
-}
-
-class AstPrinter implements Visitor<string> {
+export class AstPrinter implements Visitor<string> {
+  private parenthesize(name: string, exprs: Array<Expr>): string {
+    let str = '(' + name;
+    for (let i = 0, j = exprs.length; i < j; ++i) {
+      str += ' ' + this.print(exprs[i]);
+    }
+    str += ')';
+    return str;
+  }
   print(expr: Expr): string {
-    return expr.accept(this);
+    return expr.accept<string>(this);
   }
-  visitBinaryExpr(expr: Expr.Binary): string {
-    return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+  visitBinaryExpr(expr: Binary): string {
+    return this.parenthesize(expr.operator.lexeme, [expr.left, expr.right]);
   }
-  visitGroupingExpr(expr: Expr.Grouping): string {
-    return parenthesize('group', expr.expression);
+  visitGroupingExpr(expr: Grouping): string {
+    return this.parenthesize('group', [expr.expression]);
   }
-  visitLiteralExpr(expr: Expr.Literal): string {
+  visitLiteralExpr(expr: Literal): string {
     if (expr.value == null) return 'nil';
-    return expr.valuie.toString();
+    return expr.value.toString();
   }
-  visitUnaryExpr(expr: Expr.Unary): string {
-    return parenthesize(expr.operator.lexeme, expr.right);
+  visitUnaryExpr(expr: Unary): string {
+    return this.parenthesize(expr.operator.lexeme, [expr.right]);
   }
 }

@@ -92,10 +92,22 @@ export class GenerateJavaAst {
   }
 }
 
+function replaceObjectType(n: string): string {
+  // FIXME: this is likely not going to work. It exists primarily due to Literal
+  return n == 'Object' ? 'string' : n;
+}
 // converts the input ast structure from Java style to AssemblyScript style
 function fieldListToAsParams(str: string): string {
   return str.split(', ').reduce((str, param, i) => {
-    return str + (i > 0 ? ', ' : '') + param.split(' ').reverse().join(': ');
+    return (
+      str +
+      (i > 0 ? ', ' : '') +
+      param
+        .split(' ')
+        .reverse()
+        .map<string>((n) => replaceObjectType(n))
+        .join(': ')
+    );
   }, '');
 }
 
@@ -113,6 +125,8 @@ export class GenerateAsAst {
   defineAst(types: Array<string>): string {
     // const path = this._outputDir + '/' + this._baseName + '.java';
     let result = '';
+    result += "import { Token } from './Scanner';\n\n";
+
     result += this.defineVisitor(types);
 
     result += 'export abstract class ' + this._baseName + ' {\n';
@@ -134,16 +148,17 @@ export class GenerateAsAst {
     let result = '';
 
     result +=
-      'export class ' + className + ' implements ' + this._baseName + ' {\n';
+      'export class ' + className + ' extends ' + this._baseName + ' {\n';
     // Fields.
     for (let i = 0, k = fields.length; i < k; ++i) {
       const field = fields[i];
-      result += '  this.' + fieldListToAsParams(field) + ';\n';
+      result += '  ' + fieldListToAsParams(field) + ';\n';
     }
     result += '\n';
 
     // Constructor.
     result += '  constructor(' + fieldListToAsParams(fieldList) + ') {\n';
+    result += '    super();';
     // Store parameters in fields.
     for (let i = 0, k = fields.length; i < k; ++i) {
       const field = fields[i];
@@ -154,7 +169,7 @@ export class GenerateAsAst {
     result += '  }\n';
 
     result += '\n';
-    result += '  accept<R>(visitor: Visitor<R>) {\n';
+    result += '  accept<R>(visitor: Visitor<R>): R {\n';
     result +=
       '      return visitor.visit' + className + this._baseName + '(this);\n';
 
@@ -176,7 +191,7 @@ export class GenerateAsAst {
         '  visit' +
         typeName +
         baseName +
-        '<R>(' +
+        '(' +
         baseName.toLowerCase() +
         ': ' +
         typeName +

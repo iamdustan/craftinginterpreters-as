@@ -30,3 +30,7 @@ test('tokenizer', async (t) => {
     'EOF',
   ]);
 });
+
+test('AstPrinter can print', async (t) => {
+  t.deepEqual(await m.__print(), '(* (- 123) (group 45.67))');
+});

@@ -19,13 +19,13 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@assemblyscript/loader": "^0.19.22",
+    "@assemblyscript/loader": "^0.19.23",
     "as-bind": "^0.8.2",
     "as-wasi": "^0.4.6",
     "readline": "^1.3.0"
   },
   "devDependencies": {
-    "assemblyscript": "^0.19.22",
+    "assemblyscript": "^0.19.23",
     "ava": "^4.0.1",
     "chokidar-cli": "^3.0.0"
   }

@@ -1,8 +1,10 @@
+import { Token } from './Scanner';
+
 export interface Visitor<R> {
-  visitBinaryExpr<R>(expr: Binary): R;
-  visitGroupingExpr<R>(expr: Grouping): R;
-  visitLiteralExpr<R>(expr: Literal): R;
-  visitUnaryExpr<R>(expr: Unary): R;
+  visitBinaryExpr(expr: Binary): R;
+  visitGroupingExpr(expr: Grouping): R;
+  visitLiteralExpr(expr: Literal): R;
+  visitUnaryExpr(expr: Unary): R;
 }
 
 export abstract class Expr {
@@ -10,52 +12,52 @@ export abstract class Expr {
 }
 
 export class Binary implements Expr {
-  this.left: Expr;
-  this.operator: Token;
-  this.right: Expr;
+  left: Expr;
+  operator: Token;
+  right: Expr;
 
   constructor(left: Expr, operator: Token, right: Expr) {
-    this.left = left;
+    super();    this.left = left;
     this.operator = operator;
     this.right = right;
   }
 
-  accept<R>(visitor: Visitor<R>) {
+  accept<R>(visitor: Visitor<R>): R {
       return visitor.visitBinaryExpr(this);
   }
 }
 export class Grouping implements Expr {
-  this.expression: Expr;
+  expression: Expr;
 
   constructor(expression: Expr) {
-    this.expression = expression;
+    super();    this.expression = expression;
   }
 
-  accept<R>(visitor: Visitor<R>) {
+  accept<R>(visitor: Visitor<R>): R {
       return visitor.visitGroupingExpr(this);
   }
 }
 export class Literal implements Expr {
-  this.value: Object;
+  value: string;
 
-  constructor(value: Object) {
-    this.value = value;
+  constructor(value: string) {
+    super();    this.value = value;
   }
 
-  accept<R>(visitor: Visitor<R>) {
+  accept<R>(visitor: Visitor<R>): R {
       return visitor.visitLiteralExpr(this);
   }
 }
 export class Unary implements Expr {
-  this.operator: Token;
-  this.right: Expr;
+  operator: Token;
+  right: Expr;
 
   constructor(operator: Token, right: Expr) {
-    this.operator = operator;
+    super();    this.operator = operator;
     this.right = right;
   }
 
-  accept<R>(visitor: Visitor<R>) {
+  accept<R>(visitor: Visitor<R>): R {
       return visitor.visitUnaryExpr(this);
   }
 }

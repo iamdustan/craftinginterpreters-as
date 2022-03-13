@@ -56,6 +56,12 @@ module.exports.runPrompt = async function runPrompt(file) {
 module.exports.__tokenize = async function __tokenize(input) {
   const jlox = await getWasm();
   const result = jlox.tokenize(input);
-  console.log('scanTokens', input, result);
+  return result;
+};
+
+module.exports.__print = async function __print() {
+  const jlox = await getWasm();
+  const result = jlox.print();
+  console.log('print', result);
   return result;
 };
