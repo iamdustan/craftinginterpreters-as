@@ -1,10 +1,26 @@
 const test = require('ava');
 const m = require('..');
 
-test('tokenizer: comments are dropped', async (t) => {
+test('tokenizer: single line comments are dropped', async (t) => {
   const input = '// this is a comment';
   t.deepEqual(await m.__tokenize(input), ['EOF']);
 });
+
+test('tokenizer: multiline comments are dropped', async (t) => {
+  const input = '/* this is a comment\n   that spans multiple\n   lines */';
+  t.deepEqual(await m.__tokenize(input), ['EOF']);
+});
+
+test('tokenizer: multiline comments with inlines are dropped', async (t) => {
+  const input = '/** this is a comment\n   // that spans multiple\n   lines *********************************/';
+  t.deepEqual(await m.__tokenize(input), ['EOF']);
+});
+
+test('tokenizer: multiline comments with escapes are dropped', async (t) => {
+  const input = '/** this is a comment\n   //\\*/ that spans multiple\n   lines *********************************/';
+  t.deepEqual(await m.__tokenize(input), ['EOF']);
+});
+
 
 test('tokenizer: can do grouping things', async (t) => {
   const input = '(( )){}';

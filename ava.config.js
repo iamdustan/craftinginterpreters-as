@@ -1,3 +1,4 @@
 module.exports = {
-  ignoredByWatcher: ['packages/*/assembly', 'packageas/*/bin' /*'build'*/],
+  ignoredByWatcher: [
+    'packages/*/assembly', 'packages/*/bin'/*'build'*/],
 };

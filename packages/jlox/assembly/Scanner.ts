@@ -132,6 +132,10 @@ export class Scanner {
     return c >= '0' && c <= '9';
   }
 
+  private peekPrev(): string {
+    return this.source.charAt(this.current - 1);
+  }
+
   private peek(): string {
     if (this.isAtEnd()) return '\0';
     return this.source.charAt(this.current);
@@ -243,7 +247,25 @@ export class Scanner {
         null
       );
     } else if (c == '/') {
-      if (this.match('/')) {
+      if (this.match('*')) {
+        // multiline comments go until */
+        // caveat that this can be escaped or inside a commented line
+        // and I’m not going to add all those details
+        while (true) {
+          if (this.peek() == '*') {
+            if (this.peekPrev() == '\\') {
+              this.advance();
+              this.advance();
+            } else if (this.peekNext() == '/') {
+              // after we bail out of the loop, consume the two characters
+              this.advance();
+              this.advance();
+              break;
+            }
+          }
+          this.advance();
+        }
+      } else if (this.match('/')) {
         // A comment goes until the end of the line.
         while (this.peek() != '\n' && !this.isAtEnd()) this.advance();
       } else {
