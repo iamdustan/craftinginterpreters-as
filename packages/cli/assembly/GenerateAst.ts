@@ -158,7 +158,7 @@ export class GenerateAsAst {
 
     // Constructor.
     result += '  constructor(' + fieldListToAsParams(fieldList) + ') {\n';
-    result += '    super();';
+    // result += '    super();';
     // Store parameters in fields.
     for (let i = 0, k = fields.length; i < k; ++i) {
       const field = fields[i];
@@ -171,7 +171,7 @@ export class GenerateAsAst {
     result += '\n';
     result += '  accept<R>(visitor: Visitor<R>): R {\n';
     result +=
-      '      return visitor.visit' + className + this._baseName + '(this);\n';
+      '    return visitor.visit' + className + this._baseName + '(this);\n';
 
     result += '  }\n';
     result += '}\n';

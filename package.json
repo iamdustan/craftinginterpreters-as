@@ -5,28 +5,28 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "jlox:build:watch": "chokidar \"packages/jlox/assembly\" -c \"npm run jlox:build:untouched\"",
-    "jlox:build": "npm run jlox:build:untouched && npm run jlox:build:optimized",
-    "jlox:build:untouched": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target debug --exportRuntime --transform as-bind",
-    "jlox:build:optimized": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target release --exportRuntime --transform as-bind",
-    "cli:build:watch": "chokidar \"packages/cli/assembly\" -c \"npm run cli:build:untouched\"",
-    "cli:build": "npm run cli:build:untouched && npm run cli:build:optimized",
-    "cli:build:untouched": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target debug --exportRuntime --transform as-bind",
-    "cli:build:optimized": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target release --exportRuntime --transform as-bind",
-    "cli:run": "chokidar \"packages/cli/build/untouched.wasm\" -c \"wasmtime packages/cli/build/untouched.wasm\""
+    "jlox:build:watch": "chokidar \"packages/jlox/assembly\" -c \"npm run jlox:build:debug\"",
+    "jlox:build": "npm run jlox:build:debug && npm run jlox:build:release",
+    "jlox:build:debug": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target debug",
+    "jlox:build:release": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target release",
+    "cli:build:watch": "chokidar \"packages/cli/assembly\" -c \"npm run cli:build:debug\"",
+    "cli:build": "npm run cli:build:debug && npm run cli:build:release",
+    "cli:build:debug": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target debug",
+    "cli:build:release": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target release",
+    "cli:run": "chokidar \"packages/cli/build/debug.wasm\" -c \"wasmtime packages/cli/build/debug.wasm\"",
+    "codegen-jlox": "wasmtime packages/cli/build/debug.wasm run --as > packages/jlox/assembly/Expr.ts"
   },
   "author": "",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@assemblyscript/loader": "^0.19.23",
-    "as-bind": "^0.8.2",
+    "@assemblyscript/loader": "^0.20.13",
     "as-wasi": "^0.4.6",
     "readline": "^1.3.0"
   },
   "devDependencies": {
-    "assemblyscript": "^0.19.23",
-    "ava": "^4.0.1",
+    "assemblyscript": "^0.20.13",
+    "ava": "^4.3.0",
     "chokidar-cli": "^3.0.0"
   }
 }

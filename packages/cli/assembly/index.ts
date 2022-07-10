@@ -1,4 +1,4 @@
-import { Console } from 'as-wasi';
+import { Console } from 'as-wasi/assembly';
 import { cli, program } from './program';
 import { GenerateJavaAst, GenerateAsAst } from './GenerateAst';
 

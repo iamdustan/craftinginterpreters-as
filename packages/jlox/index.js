@@ -14,7 +14,7 @@ const WasmImports = {
   },
   /* imports go here */
 };
-const wasm = fs.readFileSync(__dirname + '/build/untouched.wasm');
+const wasm = fs.readFileSync(__dirname + '/build/debug.wasm');
 // const wasm = fs.readFileSync(__dirname + '/build/optimized.wasm');
 // const wasmModule = loader.instantiateSync(wasm, imports)
 async function getWasm() {

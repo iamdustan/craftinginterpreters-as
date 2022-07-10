@@ -17,35 +17,35 @@ export class Binary implements Expr {
   right: Expr;
 
   constructor(left: Expr, operator: Token, right: Expr) {
-    super();    this.left = left;
+    this.left = left;
     this.operator = operator;
     this.right = right;
   }
 
   accept<R>(visitor: Visitor<R>): R {
-      return visitor.visitBinaryExpr(this);
+    return visitor.visitBinaryExpr(this);
   }
 }
 export class Grouping implements Expr {
   expression: Expr;
 
   constructor(expression: Expr) {
-    super();    this.expression = expression;
+    this.expression = expression;
   }
 
   accept<R>(visitor: Visitor<R>): R {
-      return visitor.visitGroupingExpr(this);
+    return visitor.visitGroupingExpr(this);
   }
 }
 export class Literal implements Expr {
   value: string;
 
   constructor(value: string) {
-    super();    this.value = value;
+    this.value = value;
   }
 
   accept<R>(visitor: Visitor<R>): R {
-      return visitor.visitLiteralExpr(this);
+    return visitor.visitLiteralExpr(this);
   }
 }
 export class Unary implements Expr {
@@ -53,12 +53,11 @@ export class Unary implements Expr {
   right: Expr;
 
   constructor(operator: Token, right: Expr) {
-    super();    this.operator = operator;
+    this.operator = operator;
     this.right = right;
   }
 
   accept<R>(visitor: Visitor<R>): R {
-      return visitor.visitUnaryExpr(this);
+    return visitor.visitUnaryExpr(this);
   }
 }
-

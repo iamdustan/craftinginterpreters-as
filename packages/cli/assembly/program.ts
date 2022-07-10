@@ -1,6 +1,6 @@
 import 'wasi';
 
-import { CommandLine, Console, Process } from 'as-wasi';
+import { CommandLine, Console, Process } from 'as-wasi/assembly';
 
 export const cli = new CommandLine();
 export type CommandAction = (this: Command, options: Set<string>) => void;
