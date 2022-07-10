@@ -11,12 +11,13 @@ export abstract class Expr {
   abstract accept<R>(visitor: Visitor<R>): R;
 }
 
-export class Binary implements Expr {
+export class Binary extends Expr {
   left: Expr;
   operator: Token;
   right: Expr;
 
   constructor(left: Expr, operator: Token, right: Expr) {
+    super();
     this.left = left;
     this.operator = operator;
     this.right = right;
@@ -26,10 +27,11 @@ export class Binary implements Expr {
     return visitor.visitBinaryExpr(this);
   }
 }
-export class Grouping implements Expr {
+export class Grouping extends Expr {
   expression: Expr;
 
   constructor(expression: Expr) {
+    super();
     this.expression = expression;
   }
 
@@ -37,10 +39,11 @@ export class Grouping implements Expr {
     return visitor.visitGroupingExpr(this);
   }
 }
-export class Literal implements Expr {
+export class Literal extends Expr {
   value: string;
 
   constructor(value: string) {
+    super();
     this.value = value;
   }
 
@@ -48,11 +51,12 @@ export class Literal implements Expr {
     return visitor.visitLiteralExpr(this);
   }
 }
-export class Unary implements Expr {
+export class Unary extends Expr {
   operator: Token;
   right: Expr;
 
   constructor(operator: Token, right: Expr) {
+    super();
     this.operator = operator;
     this.right = right;
   }

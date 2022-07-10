@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "jlox:build:watch": "chokidar \"packages/jlox/assembly\" -c \"npm run jlox:build:debug\"",
+    "clear-terminal": "",
+    "jlox:build:watch": "chokidar \"packages/jlox/assembly\" -c \"npm run clear-terminal && npm run jlox:build:debug\"",
     "jlox:build": "npm run jlox:build:debug && npm run jlox:build:release",
     "jlox:build:debug": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target debug",
     "jlox:build:release": "asc packages/jlox/assembly/index.ts --config packages/jlox/asconfig.json --target release",
@@ -14,7 +15,7 @@
     "cli:build:debug": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target debug",
     "cli:build:release": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target release",
     "cli:run": "chokidar \"packages/cli/build/debug.wasm\" -c \"wasmtime packages/cli/build/debug.wasm\"",
-    "codegen-jlox": "wasmtime packages/cli/build/debug.wasm run --as > packages/jlox/assembly/Expr.ts"
+    "codegen": "wasmtime packages/cli/build/debug.wasm run --as > packages/jlox/assembly/Expr.ts"
   },
   "author": "",
   "license": "MIT",

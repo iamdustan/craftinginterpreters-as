@@ -3,9 +3,11 @@ import { Expr, Binary, Grouping, Literal, Unary, Visitor } from './Expr';
 export class AstPrinter implements Visitor<string> {
   private parenthesize(name: string, exprs: Array<Expr>): string {
     let str = '(' + name;
+    /*
     for (let i = 0, j = exprs.length; i < j; ++i) {
       str += ' ' + this.print(exprs[i]);
     }
+    */
     str += ')';
     return str;
   }
