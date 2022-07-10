@@ -40,6 +40,10 @@ export async function __tokenize(input) {
 export async function __print() {
   const jlox = await getWasm();
   const result = jlox.print();
-  console.log('print', result);
   return result;
+}
+
+export async function __printRpn() {
+  const jlox = await getWasm();
+  return jlox.printRpn();
 }

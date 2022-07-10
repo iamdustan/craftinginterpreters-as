@@ -50,3 +50,7 @@ test('tokenizer', async (t) => {
 test('AstPrinter can print', async (t) => {
   t.deepEqual(await m.__print(), '(* (- 123) (group 45.67))');
 });
+
+test('AstRpnPrinter can print RPN', async (t) => {
+  t.deepEqual(await m.__printRpn(), '1 2 + 4 3 - *');
+});
