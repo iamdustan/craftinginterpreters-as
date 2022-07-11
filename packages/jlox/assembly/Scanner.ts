@@ -1,56 +1,106 @@
-export declare function print(message: string): void;
+// export declare function print(message: string): void;
 
-export class TokenType {
-  // Single-character tokens
-  static readonly LEFT_PAREN: string = 'LEFT_PAREN';
-  static readonly RIGHT_PAREN: string = 'RIGHT_PAREN';
-  static readonly LEFT_BRACE: string = 'LEFT_BRACE';
-  static readonly RIGHT_BRACE: string = 'RIGHT_BRACE';
-  static readonly COMMA: string = 'COMMA';
-  static readonly DOT: string = 'DOT';
-  static readonly MINUS: string = 'MINUS';
-  static readonly PLUS: string = 'PLUS';
-  static readonly SEMICOLON: string = 'SEMICOLON';
-  static readonly SLASH: string = 'SLASH';
-  static readonly STAR: string = 'STAR';
+export enum TokenType {
+  LEFT_PAREN, // = 'LEFT_PAREN';
+  RIGHT_PAREN, //= 'RIGHT_PAREN';
+  LEFT_BRACE, //= 'LEFT_BRACE';
+  RIGHT_BRACE, // = 'RIGHT_BRACE';
+  COMMA, // = 'COMMA';
+  DOT, // = 'DOT';
+  MINUS, // = 'MINUS';
+  PLUS, // = 'PLUS';
+  SEMICOLON, // = 'SEMICOLON';
+  SLASH, // = 'SLASH';
+  STAR, // = 'STAR';
 
   // One or two character tokens.
-  static readonly BANG: string = 'BANG';
-  static readonly BANG_EQUAL: string = 'BANG_EQUAL';
-  static readonly EQUAL: string = 'EQUAL';
-  static readonly EQUAL_EQUAL: string = 'EQUAL_EQUAL';
-  static readonly GREATER: string = 'GREATER';
-  static readonly GREATER_EQUAL: string = 'GREATER_EQUAL';
-  static readonly LESS: string = 'LESS';
-  static readonly LESS_EQUAL: string = 'LESS_EQUAL';
+  BANG, // = 'BANG';
+  BANG_EQUAL, // = 'BANG_EQUAL';
+  EQUAL, // = 'EQUAL';
+  EQUAL_EQUAL, // = 'EQUAL_EQUAL';
+  GREATER, // = 'GREATER';
+  GREATER_EQUAL, // = 'GREATER_EQUAL';
+  LESS, // = 'LESS';
+  LESS_EQUAL, // = 'LESS_EQUAL';
 
   // Literals.
-  static readonly IDENTIFIER: string = 'IDENTIFIER';
-  static readonly STRING: string = 'STRING';
-  static readonly NUMBER: string = 'NUMBER';
+  IDENTIFIER, // = 'IDENTIFIER';
+  STRING, // = 'STRING';
+  NUMBER, // = 'NUMBER';
 
   // Keywords.
-  static readonly AND: string = 'AND';
-  static readonly CLASS: string = 'CLASS';
-  static readonly ELSE: string = 'ELSE';
-  static readonly FALSE: string = 'FALSE';
-  static readonly FUN: string = 'FUN';
-  static readonly FOR: string = 'FOR';
-  static readonly IF: string = 'IF';
-  static readonly NIL: string = 'NIL';
-  static readonly OR: string = 'OR';
-  static readonly PRINT: string = 'PRINT';
-  static readonly RETURN: string = 'RETURN';
-  static readonly SUPER: string = 'SUPER';
-  static readonly THIS: string = 'THIS';
-  static readonly TRUE: string = 'TRUE';
-  static readonly VAR: string = 'VAR';
-  static readonly WHILE: string = 'WHILE';
+  AND, // = 'AND';
+  CLASS, // = 'CLASS';
+  ELSE, // = 'ELSE';
+  FALSE, // = 'FALSE';
+  FUN, // = 'FUN';
+  FOR, // = 'FOR';
+  IF, // = 'IF';
+  NIL, // = 'NIL';
+  OR, // = 'OR';
+  PRINT, // = 'PRINT';
+  RETURN, // = 'RETURN';
+  SUPER, // = 'SUPER';
+  THIS, // = 'THIS';
+  TRUE, // = 'TRUE';
+  VAR, // = 'VAR';
+  WHILE, // = 'WHILE';
 
-  static readonly EOF: string = 'EOF';
+  EOF, // = 'EOF';
 }
 
-const keywords = new Map<string, string>();
+const tokensAsStrings = new Map<TokenType, string>();
+tokensAsStrings.set(TokenType.LEFT_PAREN, 'LEFT_PAREN');
+tokensAsStrings.set(TokenType.RIGHT_PAREN, 'RIGHT_PAREN');
+tokensAsStrings.set(TokenType.LEFT_BRACE, 'LEFT_BRACE');
+tokensAsStrings.set(TokenType.RIGHT_BRACE, 'RIGHT_BRACE');
+tokensAsStrings.set(TokenType.COMMA, 'COMMA');
+tokensAsStrings.set(TokenType.DOT, 'DOT');
+tokensAsStrings.set(TokenType.MINUS, 'MINUS');
+tokensAsStrings.set(TokenType.PLUS, 'PLUS');
+tokensAsStrings.set(TokenType.SEMICOLON, 'SEMICOLON');
+tokensAsStrings.set(TokenType.SLASH, 'SLASH');
+tokensAsStrings.set(TokenType.STAR, 'STAR');
+// One or two character tokens.
+tokensAsStrings.set(TokenType.BANG, 'BANG');
+tokensAsStrings.set(TokenType.BANG_EQUAL, 'BANG_EQUAL');
+tokensAsStrings.set(TokenType.EQUAL, 'EQUAL');
+tokensAsStrings.set(TokenType.EQUAL_EQUAL, 'EQUAL_EQUAL');
+tokensAsStrings.set(TokenType.GREATER, 'GREATER');
+tokensAsStrings.set(TokenType.GREATER_EQUAL, 'GREATER_EQUAL');
+tokensAsStrings.set(TokenType.LESS, 'LESS');
+tokensAsStrings.set(TokenType.LESS_EQUAL, 'LESS_EQUAL');
+
+// Literals.
+tokensAsStrings.set(TokenType.IDENTIFIER, 'IDENTIFIER');
+tokensAsStrings.set(TokenType.STRING, 'STRING');
+tokensAsStrings.set(TokenType.NUMBER, 'NUMBER');
+
+// Keywords.
+tokensAsStrings.set(TokenType.AND, 'AND');
+tokensAsStrings.set(TokenType.CLASS, 'CLASS');
+tokensAsStrings.set(TokenType.ELSE, 'ELSE');
+tokensAsStrings.set(TokenType.FALSE, 'FALSE');
+tokensAsStrings.set(TokenType.FUN, 'FUN');
+tokensAsStrings.set(TokenType.FOR, 'FOR');
+tokensAsStrings.set(TokenType.IF, 'IF');
+tokensAsStrings.set(TokenType.NIL, 'NIL');
+tokensAsStrings.set(TokenType.OR, 'OR');
+tokensAsStrings.set(TokenType.PRINT, 'PRINT');
+tokensAsStrings.set(TokenType.RETURN, 'RETURN');
+tokensAsStrings.set(TokenType.SUPER, 'SUPER');
+tokensAsStrings.set(TokenType.THIS, 'THIS');
+tokensAsStrings.set(TokenType.TRUE, 'TRUE');
+tokensAsStrings.set(TokenType.VAR, 'VAR');
+tokensAsStrings.set(TokenType.WHILE, 'WHILE');
+
+tokensAsStrings.set(TokenType.EOF, 'EOF');
+
+function tokenToString(type: TokenType): string {
+  return tokensAsStrings.get(type);
+}
+
+const keywords = new Map<string, TokenType>();
 keywords.set('and', TokenType.AND);
 keywords.set('class', TokenType.CLASS);
 keywords.set('else', TokenType.ELSE);
@@ -70,12 +120,17 @@ keywords.set('while', TokenType.WHILE);
 
 type Literal = string | null;
 export class Token {
-  type: string;
+  type: TokenType;
   lexeme: string;
   literal: Literal;
   line: i32;
 
-  constructor(tokenType: string, lexeme: string, literal: Literal, line: i32) {
+  constructor(
+    tokenType: TokenType,
+    lexeme: string,
+    literal: Literal,
+    line: i32
+  ) {
     this.type = tokenType;
     this.lexeme = lexeme;
     this.literal = literal;
@@ -85,22 +140,47 @@ export class Token {
   toString(): string {
     const literal = this.literal;
     if (literal) {
-      return this.type + ' ' + this.lexeme + ' ' + literal;
+      return tokenToString(this.type) + ' ' + this.lexeme + ' ' + literal;
     } else {
-      return this.type + ' ' + this.lexeme;
+      return tokenToString(this.type) + ' ' + this.lexeme;
     }
   }
 }
 
+/*
 class Reporter {
   report(line: i32, where: string, message: string): void {
     print('[line ' + line + '] Error ' + where + ': ' + message);
   }
+  static error(token: Token, message: string): void {
+    if (token.type == TokenType.EOF) {
+      Lox.report(token.line, ' at end', message);
+    } else {
+      Lox.report(token.line, " at '" + token.lexeme + "'", message);
+    }
+  }
 }
+*/
 class LoxCons {
-  error(line: i32, message: string): void {}
+  report(line: i32, where: string, message: string): void {
+    console.log(
+      '[line ' + line.toString() + '] Error ' + where + ': ' + message
+    );
+  }
+
+  error(line: i32, message: string): void {
+    Lox.report(line, '', message);
+  }
+
+  static error(token: Token, message: string): void {
+    if (token.type == TokenType.EOF) {
+      Lox.report(token.line, ' at end', message);
+    } else {
+      Lox.report(token.line, " at '" + token.lexeme + "'", message);
+    }
+  }
 }
-const Lox = new LoxCons();
+export const Lox = new LoxCons();
 
 export class Scanner {
   source: string;
@@ -146,7 +226,7 @@ export class Scanner {
     return this.source.charAt(this.current + 1);
   }
 
-  private addToken(tokenType: string, literal: Literal): void {
+  private addToken(tokenType: TokenType, literal: Literal): void {
     this.tokens.push(
       new Token(
         tokenType,
@@ -296,5 +376,9 @@ export class Scanner {
 
     this.tokens.push(new Token(TokenType.EOF, '', null, this.line));
     return this.tokens;
+  }
+
+  __debugAsStrings(): Array<string> {
+    return this.tokens.map<string>((t) => tokenToString(t.type));
   }
 }

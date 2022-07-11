@@ -26,3 +26,18 @@ Useful commands:
 **packages/jlox**
 
 - TODO
+
+
+### Debugging notes
+
+AssemblyScript products a .js file with it’s esm support. I’m manually renaminmg
+this file after each build to let my JavaScript pick it up. Probably a real
+reason for this but I’m retired.
+
+## Part 1: TODO
+[Chapter 6 challenges)[http://craftinginterpreters.com/parsing-expressions.html]
+- [ ] comma operator
+- [ ] ternary operators
+- [ ] error productions for each binary operator without a left-hand operand
+
+

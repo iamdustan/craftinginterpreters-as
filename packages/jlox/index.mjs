@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import * as process from 'node:child_process';
+import { stdin, stdout } from 'node:process';
 import * as readline from 'node:readline/promises';
 
 async function getWasm() {
@@ -15,17 +15,18 @@ export function runFile(file) {
 export async function runPrompt(file) {
   console.log('runPrompt');
   const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false,
+    input: stdin,
+    output: stdout,
+    // terminal: false,
   });
 
+  const jlox = await getWasm();
   while (true) {
     const answer = await rl.question('> ');
     if (answer === 'exit' || answer === '') {
       break;
     }
-    console.log(answer);
+    console.log(jlox.parse(answer));
   }
   rl.close();
   process.exit(0);

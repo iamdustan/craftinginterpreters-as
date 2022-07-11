@@ -1,6 +1,7 @@
 import { AstPrinter } from './AstPrinter';
 import { AstRpnPrinter } from './__ExperimentalRpnPrinter';
 import { Binary, Unary, Literal, Grouping } from './Expr';
+import { Parser } from './Parser';
 import { Token, TokenType, Scanner } from './Scanner';
 
 export function print(): string {
@@ -34,6 +35,18 @@ export function printRpn(): string {
 }
 export function tokenize(source: string): Array<string> {
   const scanner = new Scanner(source);
+  scanner.scanTokens();
+  return scanner.__debugAsStrings();
+}
+
+export function parse(source: string): string {
+  const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
-  return tokens.map<string>((t) => t.type);
+  const parser = new Parser(tokens);
+  const expression = parser.parse();
+  if (!expression) {
+    throw new Error('broke');
+  }
+  // TODO: error handling
+  return new AstPrinter().print(expression);
 }
