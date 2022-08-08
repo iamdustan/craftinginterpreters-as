@@ -142,14 +142,23 @@ export class Parser {
   }
 
   primary(): Expr.Expr {
-    // this should be actual literals
-    if (this.match([TokenType.FALSE])) return new Expr.Literal('false');
-    if (this.match([TokenType.TRUE])) return new Expr.Literal('true');
-    if (this.match([TokenType.NIL])) return new Expr.Literal('NIL');
+    if (this.match([TokenType.FALSE])) return new Expr.Literal<boolean>(false);
+    if (this.match([TokenType.TRUE])) return new Expr.Literal<boolean>(true);
+    // hmm...is this weird?
+    if (this.match([TokenType.NIL])) return new Expr.Literal<string>('NIL');
 
-    if (this.match([TokenType.NUMBER, TokenType.STRING])) {
+    if (this.match([TokenType.NUMBER])) {
       const literal = this.previous().literal;
-      return new Expr.Literal(literal == null ? 'NIL' : literal);
+      if (literal == null) {
+        throw new Error(
+          'unexpected parser error. This is a bug in the implementation'
+        );
+      }
+
+      return new Expr.Literal<f64>(parseFloat(literal));
+    } else if (this.match([TokenType.STRING])) {
+      const literal = this.previous().literal;
+      return new Expr.Literal<string>(literal as string);
     }
 
     if (this.match([TokenType.LEFT_PAREN])) {

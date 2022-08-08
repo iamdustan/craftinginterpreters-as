@@ -158,7 +158,7 @@ export class GenerateAsAst {
 
     // Constructor.
     result += '  constructor(' + fieldListToAsParams(fieldList) + ') {\n';
-    result += '    super();';
+    result += '    super();\n';
     // Store parameters in fields.
     for (let i = 0, k = fields.length; i < k; ++i) {
       const field = fields[i];

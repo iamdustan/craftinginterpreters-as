@@ -3,7 +3,7 @@ import { Token } from './Scanner';
 export interface Visitor<R> {
   visitBinaryExpr(expr: Binary): R;
   visitGroupingExpr(expr: Grouping): R;
-  visitLiteralExpr(expr: Literal): R;
+  visitLiteralExpr(expr: Literal<f64 | boolean | string>): R;
   visitUnaryExpr(expr: Unary): R;
 }
 
@@ -39,10 +39,10 @@ export class Grouping extends Expr {
     return visitor.visitGroupingExpr(this);
   }
 }
-export class Literal extends Expr {
-  value: string;
+export class Literal<T> extends Expr {
+  value: T;
 
-  constructor(value: string) {
+  constructor(value: T) {
     super();
     this.value = value;
   }

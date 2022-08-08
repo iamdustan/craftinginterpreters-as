@@ -18,10 +18,13 @@ program
   .action(function (opts) {
     const outputDir = 'pretent/this/is/a/directory';
     const ast = [
-      'Binary   : Expr left, Token operator, Expr right',
-      'Grouping : Expr expression',
-      'Literal  : Object value',
-      'Unary    : Token operator, Expr right',
+      'Binary         : Expr left, Token operator, Expr right',
+      'Grouping       : Expr expression',
+      'Literal        : Object value',
+      'NumberLiteral  : Number value',
+      'BooleanLiteral : Boolean value',
+      'StringLiteral  : String value',
+      'Unary          : Token operator, Expr right',
     ];
 
     if (opts.has('as')) {
