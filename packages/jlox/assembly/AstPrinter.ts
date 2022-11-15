@@ -18,8 +18,13 @@ export class AstPrinter implements Visitor<string> {
   visitGroupingExpr(expr: Grouping): string {
     return this.parenthesize('group', [expr.expression]);
   }
-  visitLiteralExpr(expr: Literal): string {
-    if (expr.value == null) return 'nil';
+  visitStringLiteralExpr(expr: Literal<string>): string {
+    return expr.value;
+  }
+  visitBooleanLiteralExpr(expr: Literal<boolean>): string {
+    return expr.value.toString();
+  }
+  visitNumberLiteralExpr(expr: Literal<f64>): string {
     return expr.value.toString();
   }
   visitUnaryExpr(expr: Unary): string {

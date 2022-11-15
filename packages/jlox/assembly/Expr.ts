@@ -3,14 +3,15 @@ import { Token } from './Scanner';
 export interface Visitor<R> {
   visitBinaryExpr(expr: Binary): R;
   visitGroupingExpr(expr: Grouping): R;
-  visitLiteralExpr(expr: Literal<f64 | boolean | string>): R;
+  visitStringLiteralExpr(expr: Literal<string>): R;
+  visitBooleanLiteralExpr(expr: Literal<boolean>): R;
+  visitNumberLiteralExpr(expr: Literal<f64>): R;
   visitUnaryExpr(expr: Unary): R;
 }
 
 export abstract class Expr {
   abstract accept<R>(visitor: Visitor<R>): R;
 }
-
 export class Binary extends Expr {
   left: Expr;
   operator: Token;
@@ -48,7 +49,15 @@ export class Literal<T> extends Expr {
   }
 
   accept<R>(visitor: Visitor<R>): R {
-    return visitor.visitLiteralExpr(this);
+    if (nameof(this.value) === 'string') {
+      return visitor.visitStringLiteralExpr(changetype<Literal<string>>(this));
+    } else if (nameof(this.value) === 'boolean') {
+      return visitor.visitBooleanLiteralExpr(changetype<Literal<boolean>>(this));
+    } else if (nameof(this.value) === 'f64') {
+      return visitor.visitNumberLiteralExpr(changetype<Literal<f64>>(this));
+    } else {
+      throw new TypeError(`Unexpected Literal type of ${nameof(this.value)} found`);
+    }
   }
 }
 export class Unary extends Expr {

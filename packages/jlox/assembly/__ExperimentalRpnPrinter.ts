@@ -24,8 +24,18 @@ export class AstRpnPrinter implements Visitor<string> {
   visitGroupingExpr(expr: Grouping): string {
     return this.parenthesize('group', [expr.expression]);
   }
-  visitLiteralExpr(expr: Literal): string {
-    if (expr.value == null) return 'nil';
+  visitStringLiteralExpr(expr: Literal<string>): string {
+    return expr.value;
+  }
+  visitNumberLiteralExpr(expr: Literal<f64>): string {
+    // this is a very naive and 
+    if (expr.value % 1 == 0) {
+      return expr.value.toString().replace('.0', '');
+    } else {
+      return expr.value.toString();
+    }
+  }
+  visitBooleanLiteralExpr(expr: Literal<boolean>): string {
     return expr.value.toString();
   }
   visitUnaryExpr(expr: Unary): string {

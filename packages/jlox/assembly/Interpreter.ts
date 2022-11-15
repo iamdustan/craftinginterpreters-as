@@ -18,7 +18,13 @@ export class Interpreter implements Expr.Visitor<T> {
 
   // Since the Literal type only returns strings currently, this will need to be
   // reworked...
-  visitLiteralExpr(expr: Expr.Literal): string {
+  visitStringLiteralExpr(expr: Expr.Literal): string {
+    return expr.value;
+  }
+  visitBooleanLiteralExpr(expr: Expr.Literal): boolean {
+    return expr.value;
+  }
+  visitNumberLiteralExpr(expr: Expr.Literal): f64 {
     return expr.value;
   }
   visitGroupingExpr(expr: Expr.Grouping) {
