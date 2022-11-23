@@ -10,7 +10,6 @@ test('tokenizer: multiline comments are dropped', async (t) => {
   const input = '/* this is a comment\n   that spans multiple\n   lines */';
   t.deepEqual(await m.__tokenize(input), ['EOF']);
 });
-
 test('tokenizer: multiline comments with inlines are dropped', async (t) => {
   const input = '/** this is a comment\n   // that spans multiple\n   lines *********************************/';
   t.deepEqual(await m.__tokenize(input), ['EOF']);
@@ -53,4 +52,11 @@ test('AstPrinter can print', async (t) => {
 
 test('AstRpnPrinter can print RPN', async (t) => {
   t.deepEqual(await m.__printRpn(), '1 2 + 4 3 - *');
+});
+
+test('evaluator can ...evaluate math?', async (t) => {
+  t.deepEqual(await m.evaluate('1 + 2'), '3.0');
+});
+test('evaluator can ...evaluate strings?', async (t) => {
+  t.deepEqual(await m.evaluate('"hello" + " world"'), 'hello world');
 });

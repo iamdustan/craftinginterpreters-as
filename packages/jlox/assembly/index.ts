@@ -2,7 +2,7 @@ import { AstPrinter } from './AstPrinter';
 import { AstRpnPrinter } from './__ExperimentalRpnPrinter';
 import { Binary, Unary, Literal, Grouping } from './Expr';
 import { Parser } from './Parser';
-// import { Interpreter } from './Interpreter';
+import { StringInterpreter, NumberInterpreter } from './Interpreter';
 import { Token, TokenType, Scanner } from './Scanner';
 
 export function print(): string {
@@ -52,8 +52,8 @@ export function parse(source: string): string {
   return new AstPrinter().print(expression);
 }
 
-/*
 export function evaluate(source: string): string {
+  console.log('evaluate(' + source + ')');
   const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
   const parser = new Parser(tokens);
@@ -61,6 +61,6 @@ export function evaluate(source: string): string {
   if (!expression) {
     throw new Error('broke');
   }
-  return new Interpreter().evaluate(expression);
+  // return new NumberInterpreter().evaluate(expression).toString();
+  return new StringInterpreter().evaluate(expression).toString();
 }
-*/

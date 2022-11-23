@@ -48,3 +48,8 @@ export async function __printRpn() {
   const jlox = await getWasm();
   return jlox.printRpn();
 }
+
+export async function evaluate(program) {
+  const jlox = await getWasm();
+  return jlox.evaluate(program);
+}

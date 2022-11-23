@@ -49,7 +49,7 @@ export class Literal<T> extends Expr {
   }
 
   accept<R>(visitor: Visitor<R>): R {
-    if (nameof(this.value) === 'string') {
+    if (nameof(this.value) === 'String') {
       return visitor.visitStringLiteralExpr(changetype<Literal<string>>(this));
     } else if (nameof(this.value) === 'boolean') {
       return visitor.visitBooleanLiteralExpr(changetype<Literal<boolean>>(this));
