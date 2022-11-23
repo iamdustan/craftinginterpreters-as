@@ -25,7 +25,12 @@ export class AstPrinter implements Visitor<string> {
     return expr.value.toString();
   }
   visitNumberLiteralExpr(expr: Literal<f64>): string {
-    return expr.value.toString();
+    // slice off the `.0` of “integer” floats
+    if (expr.value % 1 == 0) {
+      return expr.value.toString().replace('.0', '');
+    } else {
+      return expr.value.toString();
+    }
   }
   visitUnaryExpr(expr: Unary): string {
     return this.parenthesize(expr.operator.lexeme, [expr.right]);

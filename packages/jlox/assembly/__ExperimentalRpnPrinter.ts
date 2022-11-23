@@ -28,7 +28,7 @@ export class AstRpnPrinter implements Visitor<string> {
     return expr.value;
   }
   visitNumberLiteralExpr(expr: Literal<f64>): string {
-    // this is a very naive and 
+    // slice off the `.0` of “integer” floats
     if (expr.value % 1 == 0) {
       return expr.value.toString().replace('.0', '');
     } else {
