@@ -1,5 +1,5 @@
 import test from 'ava';
-import * as m from '../index.mjs';
+import * as m from '../index.js';
 
 test('tokenizer: single line comments are dropped', async (t) => {
   const input = '// this is a comment';

@@ -3,7 +3,7 @@ import { stdin, stdout } from 'node:process';
 import * as readline from 'node:readline/promises';
 
 async function getWasm() {
-  return await import('./build/debug.mjs');
+  return import('./build/debug.js');
 }
 
 export function runFile(file) {

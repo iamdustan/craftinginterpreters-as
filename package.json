@@ -20,13 +20,14 @@
   "author": "",
   "license": "MIT",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@assemblyscript/loader": "^0.24.1",
     "as-wasi": "^0.5.1"
   },
   "devDependencies": {
     "assemblyscript": "^0.24.1",
-    "ava": "^4.3.0",
+    "ava": "^5.1.0",
     "chokidar-cli": "^3.0.0"
   }
 }
