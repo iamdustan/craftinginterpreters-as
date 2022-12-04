@@ -2,7 +2,11 @@ import { AstPrinter } from './AstPrinter';
 import { AstRpnPrinter } from './__ExperimentalRpnPrinter';
 import { Binary, Unary, Literal, Grouping } from './Expr';
 import { Parser } from './Parser';
-import { StringInterpreter, NumberInterpreter } from './Interpreter';
+import {
+  StringInterpreter,
+  NumberInterpreter,
+  // Interpreter,
+} from './Interpreter';
 import { Token, TokenType, Scanner } from './Scanner';
 
 export function print(): string {
@@ -63,4 +67,5 @@ export function evaluate(source: string): string {
   }
   // return new NumberInterpreter().evaluate(expression).toString();
   return new StringInterpreter().evaluate(expression).toString();
+  // return new Interpreter<string>().evaluate(expression).unwrap().toString();
 }

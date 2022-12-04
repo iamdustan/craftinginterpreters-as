@@ -1,9 +1,12 @@
 import { TokenType } from './Scanner';
 import * as Expr from './Expr';
-class Boxed<T> {
+class Boxed<T extends Object> {
   value: T;
   constructor(t: T) {
     this.value = t;
+  }
+  unwrap(): T {
+    return this.value as T;
   }
 }
 
@@ -171,10 +174,11 @@ export class NumberInterpreter implements Expr.Visitor<f64> {
     }
   }
 }
+
 /*
-export class Interpreter implements Expr.Visitor<Boxed<Object>> {
-  evaluate(expr: Expr.Expr): Boxed<Object> {
-    return expr.accept<Boxed<Object>>(this);
+export class Interpreter<T> implements Expr.Visitor<Boxed<T>> {
+  evaluate(expr: Expr.Expr): Boxed<T> {
+    return expr.accept<Boxed<T>>(this);
   }
   private isTruthy<T>(obj: T): boolean {
     if (obj == null) return false;
@@ -187,19 +191,16 @@ export class Interpreter implements Expr.Visitor<Boxed<Object>> {
     return a == b;
   }
 
-  // Since the Literal type only returns strings currently, this will need to be
-  // reworked...
-  visitStringLiteralExpr(expr: Expr.Literal<string>): Boxed<Object> {
+  visitStringLiteralExpr(expr: Expr.Literal<string>): Boxed<string> {
+    return new Boxed<string>(expr.value);
+  }
+  visitBooleanLiteralExpr(expr: Expr.Literal<boolean>): Boxed<boolean> {
+    return new Boxed<boolean>(expr.value);
+  }
+  visitNumberLiteralExpr(expr: Expr.Literal<f64>): Boxed<f64> {
     return new Boxed(expr.value);
   }
-  visitBooleanLiteralExpr(expr: Expr.Literal<boolean>): Boxed<Object> {
-    return new Boxed(expr.value);
-  }
-  visitNumberLiteralExpr(expr: Expr.Literal<f64>): Boxed<Object> {
-    return new Boxed(expr.value);
-  }
-  /*
-  visitGroupingExpr(expr: Expr.Grouping): Object {
+  visitGroupingExpr(expr: Expr.Grouping): Boxed<T> {
     return this.evaluate(expr.expression);
   }
   visitUnaryExpr(expr: Expr.Unary): Object {
@@ -214,7 +215,7 @@ export class Interpreter implements Expr.Visitor<Boxed<Object>> {
     // unreachable
     throw new TypeError('compiler error probably');
   }
-  visitBinaryExpr(expr: Expr.Binary): Object {
+  visitBinaryExpr<U>(expr: Expr.Binary): Boxed<U> {
     const left = this.evaluate(expr.left);
     const right = this.evaluate(expr.right);
 
@@ -245,4 +246,4 @@ export class Interpreter implements Expr.Visitor<Boxed<Object>> {
     }
   }
 }
-  */
+*/
