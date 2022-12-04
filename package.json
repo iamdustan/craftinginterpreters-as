@@ -23,6 +23,7 @@
   "type": "module",
   "dependencies": {
     "@assemblyscript/loader": "^0.24.1",
+    "as-variant": "^0.4.0",
     "as-wasi": "^0.5.1"
   },
   "devDependencies": {
