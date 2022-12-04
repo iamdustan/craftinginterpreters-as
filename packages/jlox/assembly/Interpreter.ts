@@ -1,14 +1,6 @@
+import { Variant } from 'as-variant/assembly';
 import { TokenType } from './Scanner';
 import * as Expr from './Expr';
-class Boxed<T extends Object> {
-  value: T;
-  constructor(t: T) {
-    this.value = t;
-  }
-  unwrap(): T {
-    return this.value as T;
-  }
-}
 
 export class StringInterpreter implements Expr.Visitor<string> {
   evaluate(expr: Expr.Expr): string {
@@ -51,7 +43,7 @@ export class StringInterpreter implements Expr.Visitor<string> {
         'unimplmented()! handle a GroupingExpr in the NumberInterpreter'
       );
     }
-    return 0;
+    unreachable();
   }
   visitBinaryExpr(expr: Expr.Binary): string {
     const left = this.evaluate(expr.left);
@@ -175,75 +167,80 @@ export class NumberInterpreter implements Expr.Visitor<f64> {
   }
 }
 
-/*
-export class Interpreter<T> implements Expr.Visitor<Boxed<T>> {
-  evaluate(expr: Expr.Expr): Boxed<T> {
-    return expr.accept<Boxed<T>>(this);
+export class Interpreter implements Expr.Visitor<Variant> {
+  evaluate(expr: Expr.Expr): Variant {
+    return expr.accept<Variant>(this);
   }
-  private isTruthy<T>(obj: T): boolean {
-    if (obj == null) return false;
-    if (obj instanceof Boolean) return obj === true;
+  private isTruthy(obj: Variant): boolean {
+    // TODO: add null support
+    // if (obj.is<typeof null>()) return false;
+    if (obj.is<boolean>()) return obj.get<boolean>() === true;
     return true;
   }
-  private isEqual<A, B>(a: A, b: B): boolean {
-    if ((a == null) & (b == null)) return true;
-    if (a == null) return false;
-    return a == b;
+  private isEqual(a: Variant, b: Variant): boolean {
+    // if ((a == null) & (b == null)) return true;
+    // if (a == null) return false;
+    return a.getUnchecked<string>() == b.getUnchecked<string>();
   }
 
-  visitStringLiteralExpr(expr: Expr.Literal<string>): Boxed<string> {
-    return new Boxed<string>(expr.value);
+  visitStringLiteralExpr(expr: Expr.Literal<string>): Variant {
+    return Variant.from(expr.value);
   }
-  visitBooleanLiteralExpr(expr: Expr.Literal<boolean>): Boxed<boolean> {
-    return new Boxed<boolean>(expr.value);
+  visitBooleanLiteralExpr(expr: Expr.Literal<boolean>): Variant {
+    return Variant.from(expr.value);
   }
-  visitNumberLiteralExpr(expr: Expr.Literal<f64>): Boxed<f64> {
-    return new Boxed(expr.value);
+  visitNumberLiteralExpr(expr: Expr.Literal<f64>): Variant {
+    return Variant.from(expr.value);
   }
-  visitGroupingExpr(expr: Expr.Grouping): Boxed<T> {
+  visitGroupingExpr(expr: Expr.Grouping): Variant {
     return this.evaluate(expr.expression);
   }
-  visitUnaryExpr(expr: Expr.Unary): Object {
+  visitUnaryExpr(expr: Expr.Unary): Variant {
     const right = this.evaluate(expr.right);
     switch (expr.operator.type) {
       case TokenType.BANG:
-        return !this.isTruthy(right);
+        return Variant.from(!this.isTruthy(right));
       case TokenType.MINUS:
-        return -right;
+        return Variant.from(-right.get<f64>());
     }
 
-    // unreachable
+    // unreachable();
     throw new TypeError('compiler error probably');
   }
-  visitBinaryExpr<U>(expr: Expr.Binary): Boxed<U> {
+  visitBinaryExpr(expr: Expr.Binary): Variant {
     const left = this.evaluate(expr.left);
     const right = this.evaluate(expr.right);
 
     switch (expr.operator.type) {
       case TokenType.MINUS:
-        return left - right;
+        return Variant.from(left.get<f64>() - right.get<f64>());
       case TokenType.PLUS:
-        // TODO: do I need to handle number types and string types differently?
-        return left + right;
+        if (left.is<f64>()) {
+          // TODO: do I need to handle number types and string types differently?
+          return Variant.from(left.get<f64>() + right.get<f64>());
+        } else {
+          return Variant.from(left.get<string>() + right.get<string>());
+        }
       case TokenType.SLASH:
-        return left / right;
+        return Variant.from(left.get<f64>() / right.get<f64>());
       case TokenType.STAR:
-        return left * right;
+        return Variant.from(left.get<f64>() * right.get<f64>());
 
       // TODO: should these all be f64s?
       case TokenType.GREATER:
-        return left > right;
+        return Variant.from(left.get<f64>() > right.get<f64>());
       case TokenType.GREATER_EQUAL:
-        return left >= right;
+        return Variant.from(left.get<f64>() >= right.get<f64>());
       case TokenType.LESS:
-        return left > right;
+        return Variant.from(left.get<f64>() < right.get<f64>());
       case TokenType.LESS_EQUAL:
-        return left >= right;
       case TokenType.BANG_EQUAL:
-        return !this.isEqual(left, right);
+        return Variant.from(!this.isEqual(left, right));
       case TokenType.EQUAL_EQUAL:
-        return this.isEqual(left, right);
+        return Variant.from(this.isEqual(left, right));
+      default:
+        // unreachable();
+        throw new TypeError('compiler error probably');
     }
   }
 }
-*/

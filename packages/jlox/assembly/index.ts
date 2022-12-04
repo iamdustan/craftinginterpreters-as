@@ -5,7 +5,7 @@ import { Parser } from './Parser';
 import {
   StringInterpreter,
   NumberInterpreter,
-  // Interpreter,
+  Interpreter,
 } from './Interpreter';
 import { Token, TokenType, Scanner } from './Scanner';
 
@@ -66,6 +66,7 @@ export function evaluate(source: string): string {
     throw new Error('broke');
   }
   // return new NumberInterpreter().evaluate(expression).toString();
-  return new StringInterpreter().evaluate(expression).toString();
-  // return new Interpreter<string>().evaluate(expression).unwrap().toString();
+  // return new StringInterpreter().evaluate(expression).toString();
+  const r = new Interpreter().evaluate(expression);
+  return r.is<string>() ? r.get<string>() : r.getUnchecked<f64>().toString();
 }
