@@ -1,4 +1,4 @@
-import * as m from './packages/jlox/index.mjs';
+import * as m from './packages/jlox/index.js';
 
 const input = `var language = "lox";`;
 

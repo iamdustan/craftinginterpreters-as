@@ -26,7 +26,8 @@ export async function runPrompt(file) {
     if (answer === 'exit' || answer === '') {
       break;
     }
-    console.log(jlox.parse(answer));
+    // console.log(jlox.parse(answer));
+    console.log(jlox.evaluate(answer));
   }
   rl.close();
   process.exit(0);

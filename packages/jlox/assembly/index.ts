@@ -53,7 +53,6 @@ export function parse(source: string): string {
 }
 
 export function evaluate(source: string): string {
-  console.log('evaluate(' + source + ')');
   const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
   const parser = new Parser(tokens);
