@@ -2,11 +2,7 @@ import { AstPrinter } from './AstPrinter';
 import { AstRpnPrinter } from './__ExperimentalRpnPrinter';
 import { Binary, Unary, Literal, Grouping } from './Expr';
 import { Parser } from './Parser';
-import {
-  StringInterpreter,
-  NumberInterpreter,
-  Interpreter,
-} from './Interpreter';
+import { Interpreter } from './Interpreter';
 import { Token, TokenType, Scanner } from './Scanner';
 
 export function print(): string {
@@ -65,8 +61,6 @@ export function evaluate(source: string): string {
   if (!expression) {
     throw new Error('broke');
   }
-  // return new NumberInterpreter().evaluate(expression).toString();
-  // return new StringInterpreter().evaluate(expression).toString();
   const r = new Interpreter().evaluate(expression);
   return r.is<string>() ? r.get<string>() : r.getUnchecked<f64>().toString();
 }
