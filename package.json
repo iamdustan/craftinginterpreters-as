@@ -16,7 +16,7 @@
     "cli:build:release": "asc packages/cli/assembly/index.ts --config packages/cli/asconfig.json --target release",
     "cli:run": "chokidar \"packages/cli/build/debug.wasm\" -c \"wasmtime packages/cli/build/debug.wasm\"",
     "codegen": "wasmtime packages/cli/build/debug.wasm run --as > packages/jlox/assembly/Expr.ts",
-    "codegen:full": "npm run jlox:build:debug && wasmtime packages/cli/build/debug.wasm run --as > packages/jlox/assembly/Expr.ts"
+    "codegen:full": "npm run cli:build:debug && wasmtime packages/cli/build/debug.wasm run --as > packages/jlox/assembly/Expr.ts"
   },
   "author": "",
   "license": "MIT",
@@ -24,11 +24,11 @@
   "type": "module",
   "dependencies": {
     "@assemblyscript/loader": "^0.24.1",
-    "as-variant": "^0.4.0",
-    "as-wasi": "^0.5.1"
+    "as-variant": "^0.4.0"
   },
   "devDependencies": {
-    "assemblyscript": "^0.24.1",
+    "@assemblyscript/wasi-shim": "^0.1.0",
+    "assemblyscript": "^0.25.0",
     "ava": "^5.1.0",
     "chokidar-cli": "^3.0.0"
   }

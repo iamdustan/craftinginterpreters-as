@@ -1,6 +1,4 @@
-import 'wasi';
-
-import { CommandLine, Console, Process } from 'as-wasi/assembly';
+import { CommandLine } from './forks/CommandLine';
 
 export const cli = new CommandLine();
 export type CommandAction = (this: Command, options: Set<string>) => void;
@@ -22,8 +20,8 @@ class Command {
     this.option('--help', 'Print help');
   }
   help(): void {
-    Console.log(this._program._name + ' ' + this._name + ': help');
-    Console.log(this._description);
+    console.log(this._program._name + ' ' + this._name + ': help');
+    console.log(this._description);
 
     const length = 8;
     const options = this._options.keys();
@@ -31,7 +29,7 @@ class Command {
       const option = options[i];
       const description = this._options.get(option);
       const optName = option.padEnd(length, ' ');
-      Console.log('  ' + optName + ' ' + description);
+      console.log('  ' + optName + ' ' + description);
     }
   }
 
@@ -115,7 +113,7 @@ class Program {
     const commandName = args[0];
     if (commandName.startsWith('-')) {
       // actually we have a built in option like --help or --version. look it up.
-      Console.log('do a thing');
+      console.log('do a thing');
     } else {
       const options: Set<string> = args.reduce((acc, cur) => {
         if (cur.startsWith('--')) {
@@ -133,7 +131,7 @@ class Program {
       const command = this._commands.get(name);
       command.execute(opts);
     } else {
-      Console.log('[ERROR] The command "' + name + '" is not available.');
+      console.log('[ERROR] The command "' + name + '" is not available.');
     }
   }
 }
@@ -145,9 +143,9 @@ program
   .description('Print help text')
   .action(function help(this: Command) {
     const program = (this as Command)._program;
-    Console.log(program._name);
-    Console.log(program._description + '\n');
-    Console.log('Usage: help [options]');
+    console.log(program._name);
+    console.log(program._description + '\n');
+    console.log('Usage: help [options]');
     const commands = program._commands.keys();
     let length = 0;
     for (let i = 0, k = commands.length; i < k; i++) {
@@ -161,9 +159,9 @@ program
       const value = commands[i];
       const command = value;
       const description = program._commands.get(command)._description;
-      Console.log('  ' + value.padStart(length, ' ') + '  ' + description);
+      console.log('  ' + value.padStart(length, ' ') + '  ' + description);
     }
-    Process.exit(2);
+    process.exit(2);
   });
 
 program
@@ -171,6 +169,6 @@ program
   .description('Print program version')
   .action(() => {
     const program = (this as Command)._program;
-    Console.log(program._version);
-    Process.exit(0);
+    console.log(program._version);
+    process.exit(0);
   });

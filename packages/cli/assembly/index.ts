@@ -1,4 +1,3 @@
-import { Console } from 'as-wasi/assembly';
 import { cli, program } from './program';
 import { GenerateJavaAst, GenerateAsAst } from './GenerateAst';
 
@@ -29,10 +28,10 @@ program
 
     if (opts.has('as')) {
       const gen = new GenerateAsAst(outputDir, 'Expr');
-      Console.log(gen.defineAst(ast));
+      console.log(gen.defineAst(ast));
     } else {
       const gen = new GenerateJavaAst(outputDir, 'Expr');
-      Console.log(gen.defineAst(ast));
+      console.log(gen.defineAst(ast));
     }
   });
 
