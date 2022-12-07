@@ -16,22 +16,27 @@ program
   .option('--help', '')
   .action(function (opts) {
     const outputDir = 'pretent/this/is/a/directory';
-    const ast = [
+    const exprNodes = [
       'Binary         : Expr left, Token operator, Expr right',
       'Grouping       : Expr expression',
       'Literal        : Object value',
-      // 'NumberLiteral  : Number value',
-      // 'BooleanLiteral : Boolean value',
-      // 'StringLiteral  : String value',
       'Unary          : Token operator, Expr right',
+    ];
+    const stmtNodes = [
+      'Expression : Expr expression',
+      'Print      : Expr expression',
     ];
 
     if (opts.has('as')) {
-      const gen = new GenerateAsAst(outputDir, 'Expr');
-      console.log(gen.defineAst(ast));
+      const exprGen = new GenerateAsAst(outputDir, 'Expr');
+      console.log(exprGen.defineAst(exprNodes));
+      // const stmtGen = new GenerateAsAst(outputDir, 'Stmt');
+      // console.log(stmtGen.defineAst(stmtNodes));
     } else {
-      const gen = new GenerateJavaAst(outputDir, 'Expr');
-      console.log(gen.defineAst(ast));
+      const exprGen = new GenerateJavaAst(outputDir, 'Expr');
+      console.log(exprGen.defineAst(exprNodes));
+      // const stmtGen = new GenerateAsAst(outputDir, 'Stmt');
+      // console.log(stmtGen.defineAst(stmtNodes));
     }
   });
 
