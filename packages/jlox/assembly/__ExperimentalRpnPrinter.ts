@@ -24,19 +24,32 @@ export class AstRpnPrinter implements Visitor<string> {
   visitGroupingExpr(expr: Grouping): string {
     return this.parenthesize('group', [expr.expression]);
   }
-  visitStringLiteralExpr(expr: Literal<string>): string {
-    return expr.value;
-  }
-  visitNumberLiteralExpr(expr: Literal<f64>): string {
-    // slice off the `.0` of “integer” floats
-    if (expr.value % 1 == 0) {
-      return expr.value.toString().replace('.0', '');
-    } else {
-      return expr.value.toString();
+  visitLiteralExpr(expr: Literal): string {
+    const v = expr.value;
+    if (v.is<string>()) {
+      return v.get<string>();
+    } else if (v.is<boolean>()) {
+      return v.get<boolean>().toString();
+    } else if (
+      v.is<f64>() ||
+      v.is<f32>()
+    ) {
+      let num = v.getUnchecked<f64>();
+      // slice off the `.0` of “integer” floats
+      if (num % 1 == 0) {
+        return num.toString().replace('.0', '');
+      } else {
+        return num.toString();
+      }
+    } else if (
+      v.is<i64>() ||
+      v.is<i32>()
+    ) {
+      let num = v.get<i32>();
+      return num.toString();
     }
-  }
-  visitBooleanLiteralExpr(expr: Literal<boolean>): string {
-    return expr.value.toString();
+    throw new TypeError('unexpected Literal type ' + v.id.toString());
+    // unreachable();
   }
   visitUnaryExpr(expr: Unary): string {
     return this.parenthesize(expr.operator.lexeme, [expr.right]);

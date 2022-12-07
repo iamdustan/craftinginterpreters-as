@@ -18,15 +18,10 @@ export class Interpreter implements Expr.Visitor<Variant> {
     return a.getUnchecked<string>() == b.getUnchecked<string>();
   }
 
-  visitStringLiteralExpr(expr: Expr.Literal<string>): Variant {
-    return Variant.from(expr.value);
+  visitLiteralExpr(expr: Expr.Literal): Variant {
+    return expr.value;
   }
-  visitBooleanLiteralExpr(expr: Expr.Literal<boolean>): Variant {
-    return Variant.from(expr.value);
-  }
-  visitNumberLiteralExpr(expr: Expr.Literal<f64>): Variant {
-    return Variant.from(expr.value);
-  }
+
   visitGroupingExpr(expr: Expr.Grouping): Variant {
     return this.evaluate(expr.expression);
   }

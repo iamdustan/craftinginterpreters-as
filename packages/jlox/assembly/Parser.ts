@@ -11,6 +11,7 @@ primary        → NUMBER | STRING | "true" | "false" | "nil"
                | "(" expression ")" ;
  *
  */
+import { Variant} from 'as-variant/assembly';
 import { Token, TokenType, Lox } from './Scanner';
 import * as Expr from './Expr';
 
@@ -142,10 +143,10 @@ export class Parser {
   }
 
   primary(): Expr.Expr {
-    if (this.match([TokenType.FALSE])) return new Expr.Literal<boolean>(false);
-    if (this.match([TokenType.TRUE])) return new Expr.Literal<boolean>(true);
+    if (this.match([TokenType.FALSE])) return new Expr.Literal(Variant.from(false));
+    if (this.match([TokenType.TRUE])) return new Expr.Literal(Variant.from(true));
     // hmm...is this weird?
-    if (this.match([TokenType.NIL])) return new Expr.Literal<string>('NIL');
+    if (this.match([TokenType.NIL])) return new Expr.Literal(Variant.from('NIL'));
 
     if (this.match([TokenType.NUMBER])) {
       const literal = this.previous().literal;
@@ -155,10 +156,10 @@ export class Parser {
         );
       }
 
-      return new Expr.Literal<f64>(parseFloat(literal));
+      return new Expr.Literal(Variant.from(parseFloat(literal)));
     } else if (this.match([TokenType.STRING])) {
       const literal = this.previous().literal;
-      return new Expr.Literal<string>(literal as string);
+      return new Expr.Literal(Variant.from(literal as string));
     }
 
     if (this.match([TokenType.LEFT_PAREN])) {

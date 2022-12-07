@@ -1,3 +1,4 @@
+import { Variant } from 'as-variant/assembly';
 import { AstPrinter } from './AstPrinter';
 import { AstRpnPrinter } from './__ExperimentalRpnPrinter';
 import { Binary, Unary, Literal, Grouping } from './Expr';
@@ -7,9 +8,9 @@ import { Token, TokenType, Scanner } from './Scanner';
 
 export function print(): string {
   const expr = new Binary(
-    new Unary(new Token(TokenType.MINUS, '-', null, 1), new Literal<f64>(123)),
+    new Unary(new Token(TokenType.MINUS, '-', null, 1), new Literal(Variant.from(123))),
     new Token(TokenType.STAR, '*', null, 1),
-    new Grouping(new Literal<f64>(45.67))
+    new Grouping(new Literal(Variant.from(45.67)))
   );
 
   return new AstPrinter().print(expr);
@@ -17,14 +18,14 @@ export function print(): string {
 
 export function printRpn(): string {
   const e1 = new Binary(
-    new Literal<f64>(1),
+    new Literal(Variant.from(1)),
     new Token(TokenType.PLUS, '+', null, 1),
-    new Literal<f64>(2)
+    new Literal(Variant.from(2))
   );
   const e2 = new Binary(
-    new Literal<f64>(4),
+    new Literal(Variant.from(4)),
     new Token(TokenType.MINUS, '-', null, 1),
-    new Literal<f64>(3)
+    new Literal(Variant.from(3))
   );
   const expr = new Binary(
     new Grouping(e1),

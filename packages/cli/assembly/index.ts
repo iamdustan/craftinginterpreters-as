@@ -21,9 +21,9 @@ program
       'Binary         : Expr left, Token operator, Expr right',
       'Grouping       : Expr expression',
       'Literal        : Object value',
-      'NumberLiteral  : Number value',
-      'BooleanLiteral : Boolean value',
-      'StringLiteral  : String value',
+      // 'NumberLiteral  : Number value',
+      // 'BooleanLiteral : Boolean value',
+      // 'StringLiteral  : String value',
       'Unary          : Token operator, Expr right',
     ];
 

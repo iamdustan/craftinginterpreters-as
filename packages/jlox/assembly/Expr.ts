@@ -3,15 +3,14 @@ import { Token } from './Scanner';
 export interface Visitor<R> {
   visitBinaryExpr(expr: Binary): R;
   visitGroupingExpr(expr: Grouping): R;
-  visitStringLiteralExpr(expr: Literal<string>): R;
-  visitBooleanLiteralExpr(expr: Literal<boolean>): R;
-  visitNumberLiteralExpr(expr: Literal<f64>): R;
+  visitLiteralExpr(expr: Literal): R;
   visitUnaryExpr(expr: Unary): R;
 }
 
 export abstract class Expr {
   abstract accept<R>(visitor: Visitor<R>): R;
 }
+
 export class Binary extends Expr {
   left: Expr;
   operator: Token;
@@ -40,24 +39,16 @@ export class Grouping extends Expr {
     return visitor.visitGroupingExpr(this);
   }
 }
-export class Literal<T> extends Expr {
-  value: T;
+export class Literal extends Expr {
+  value: Variant;
 
-  constructor(value: T) {
+  constructor(value: Variant) {
     super();
     this.value = value;
   }
 
   accept<R>(visitor: Visitor<R>): R {
-    if (nameof(this.value) === 'String') {
-      return visitor.visitStringLiteralExpr(changetype<Literal<string>>(this));
-    } else if (nameof(this.value) === 'boolean') {
-      return visitor.visitBooleanLiteralExpr(changetype<Literal<boolean>>(this));
-    } else if (nameof(this.value) === 'f64') {
-      return visitor.visitNumberLiteralExpr(changetype<Literal<f64>>(this));
-    } else {
-      throw new TypeError(`Unexpected Literal type of ${nameof(this.value)} found`);
-    }
+    return visitor.visitLiteralExpr(this);
   }
 }
 export class Unary extends Expr {
@@ -74,3 +65,4 @@ export class Unary extends Expr {
     return visitor.visitUnaryExpr(this);
   }
 }
+
