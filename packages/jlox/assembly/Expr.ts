@@ -1,3 +1,4 @@
+import { Variant } from 'as-variant/assembly';
 import { Token } from './Scanner';
 
 export interface Visitor<R> {

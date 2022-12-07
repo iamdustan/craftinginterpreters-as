@@ -93,8 +93,7 @@ export class GenerateJavaAst {
 }
 
 function replaceObjectType(n: string): string {
-  // FIXME: this is likely not going to work. It exists primarily due to Literal
-  return n == 'Object' ? 'string' : n;
+  return n == 'Object' ? 'Variant' : n;
 }
 // converts the input ast structure from Java style to AssemblyScript style
 function fieldListToAsParams(str: string): string {
@@ -125,6 +124,7 @@ export class GenerateAsAst {
   defineAst(types: Array<string>): string {
     // const path = this._outputDir + '/' + this._baseName + '.java';
     let result = '';
+    result += "import { Variant } from 'as-variant/assembly';\n\n";
     result += "import { Token } from './Scanner';\n\n";
 
     result += this.defineVisitor(types);
