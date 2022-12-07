@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@assemblyscript/wasi-shim": "^0.1.0",
-    "assemblyscript": "^0.25.0",
+    "assemblyscript": "^0.24.1",
     "ava": "^5.1.0",
     "chokidar-cli": "^3.0.0"
   }
