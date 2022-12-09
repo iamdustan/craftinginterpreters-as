@@ -172,6 +172,11 @@ class LoxCons {
     Lox.report(line, '', message);
   }
 
+  runtimeError(error: any): void {
+    console.log(error);
+    // throw error;
+  }
+
   static error(token: Token, message: string): void {
     if (token.type == TokenType.EOF) {
       Lox.report(token.line, ' at end', message);

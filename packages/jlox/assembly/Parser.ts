@@ -14,6 +14,7 @@ primary        → NUMBER | STRING | "true" | "false" | "nil"
 import { Variant} from 'as-variant/assembly';
 import { Token, TokenType, Lox } from './Scanner';
 import * as Expr from './Expr';
+import * as Stmt from './Stmt';
 
 export class Parser {
   tokens: Array<Token> = [];
@@ -81,6 +82,23 @@ export class Parser {
   expression(): Expr.Expr {
     return this.equality();
   }
+
+  statement(): Stmt.Stmt {
+    if (this.match([TokenType.PRINT])) return this.printStatement();
+    return this.expressionStatement();
+  }
+  printStatement(): Stmt.Print {
+    const value = this.expression();
+    this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
+    return new Stmt.Print(value);
+  }
+  expressionStatement(): Stmt.Expression {
+    const value = this.expression();
+    this.consume(TokenType.SEMICOLON, "Expect ';' after value.");
+    return new Stmt.Expression(value);
+  }
+
+
   term(): Expr.Expr {
     let expr = this.factor();
 
@@ -185,9 +203,13 @@ export class Parser {
     return new ParseError();
   }
 
-  parse(): Expr.Expr {
-    // TODO: error handling?
-    return this.expression();
+  parse(): Array<Stmt.Stmt>{
+    const statements: Array<Stmt.Stmt> = [];
+    while (!this.isAtEnd()) {
+      statements.push(this.statement());
+
+    }
+    return statements;
   }
 }
 

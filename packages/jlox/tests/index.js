@@ -56,12 +56,12 @@ test('AstRpnPrinter can print RPN', async (t) => {
 });
 
 test('evaluator can ...evaluate math?', async (t) => {
-  t.deepEqual(await m.evaluate('1 + 2'), '3.0');
+  t.deepEqual(await m.evaluate('1 + 2;'), '3.0');
 });
 test('evaluator can ...evaluate strings?', async (t) => {
-  t.deepEqual(await m.evaluate('"hello" + " world"'), 'hello world');
+  t.deepEqual(await m.evaluate('"hello" + " world";'), 'hello world');
 });
 
 test('evaluator can ...do more math', async (t) => {
-  t.deepEqual(await m.evaluate('(12 * 2) + 3'), '27.0');
+  t.deepEqual(await m.evaluate('(12 * 2) + 3;'), '27.0');
 });

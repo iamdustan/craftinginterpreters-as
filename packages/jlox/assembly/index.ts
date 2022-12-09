@@ -45,15 +45,28 @@ export function parse(source: string): string {
   const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
   const parser = new Parser(tokens);
-  const expression = parser.parse();
-  if (!expression) {
+  const statements = parser.parse();
+  // TODO: error handling?
+  if (!statements) {
     throw new Error('broke');
   }
-  // TODO: error handling
-  return new AstPrinter().print(expression);
+  return new AstPrinter().print(statements[0].getExpression());
 }
 
 export function evaluate(source: string): string {
+  const scanner = new Scanner(source);
+  const tokens = scanner.scanTokens();
+  const parser = new Parser(tokens);
+  const statements = parser.parse();
+  if (!statements) {
+    throw new Error('broke');
+  }
+  const interpreter = new Interpreter();
+  const r = interpreter.evaluate(statements[0].getExpression());
+  return r.is<string>() ? r.get<string>() : r.getUnchecked<f64>().toString();
+}
+
+export function interpret(source: string): void {
   const scanner = new Scanner(source);
   const tokens = scanner.scanTokens();
   const parser = new Parser(tokens);
@@ -61,6 +74,6 @@ export function evaluate(source: string): string {
   if (!expression) {
     throw new Error('broke');
   }
-  const r = new Interpreter().evaluate(expression);
-  return r.is<string>() ? r.get<string>() : r.getUnchecked<f64>().toString();
+  const interpreter = new Interpreter();
+  interpreter.interpret(expression);
 }

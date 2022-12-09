@@ -1,6 +1,4 @@
-import { Variant } from 'as-variant/assembly';
-
-import { Token } from './Scanner';
+import { Expr } from './Expr';
 
 export interface Visitor<R> {
   visitExpressionStmt(stmt: Expression): R;
@@ -9,10 +7,14 @@ export interface Visitor<R> {
 
 export abstract class Stmt {
   abstract accept<R>(visitor: Visitor<R>): R;
+  abstract getExpression(): Expr;
 }
 
 export class Expression extends Stmt {
   expression: Expr;
+  getExpression(): Expr {
+    return this.expression;
+  }
 
   constructor(expression: Expr) {
     super();
@@ -25,6 +27,10 @@ export class Expression extends Stmt {
 }
 export class Print extends Stmt {
   expression: Expr;
+
+  getExpression(): Expr {
+    return this.expression;
+  }
 
   constructor(expression: Expr) {
     super();
