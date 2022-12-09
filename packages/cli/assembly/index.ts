@@ -21,22 +21,20 @@ program
       'Grouping       : Expr expression',
       'Literal        : Object value',
       'Unary          : Token operator, Expr right',
+      'Variable       : Token name',
     ];
     const stmtNodes = [
       'Expression : Expr expression',
       'Print      : Expr expression',
+      'Var        : Token name, Expr initializer',
     ];
 
     if (opts.has('as')) {
-      const exprGen = new GenerateAsAst(outputDir, 'Expr');
-      console.log(exprGen.defineAst(exprNodes));
-      // const stmtGen = new GenerateAsAst(outputDir, 'Stmt');
-      // console.log(stmtGen.defineAst(stmtNodes));
+      // console.log(new GenerateAsAst(outputDir, 'Expr').defineAst(exprNodes));
+      console.log(new GenerateAsAst(outputDir, 'Stmt').defineAst(stmtNodes));
     } else {
-      const exprGen = new GenerateJavaAst(outputDir, 'Expr');
-      console.log(exprGen.defineAst(exprNodes));
-      // const stmtGen = new GenerateAsAst(outputDir, 'Stmt');
-      // console.log(stmtGen.defineAst(stmtNodes));
+      // console.log(new GenerateJavaAst(outputDir, 'Expr').defineAst(exprNodes));
+      // console.log(new GenerateAsAst(outputDir, 'Stmt').defineAst(stmtNodes));
     }
   });
 
